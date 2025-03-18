@@ -108,8 +108,14 @@ def main():
     initial_node = str(args.initial)
     final_node = str(args.final)
 
-    print("Graph nodes:", graph.nodes())
-    print("Graph edges:", graph.edges())
+    print("\n=== Traffic Network Analysis ===")
+    print(f"Graph loaded from: {args.input_file.name}")
+    print(f"Number of vehicles: {num_vehicles}")
+    print(f"Start node: {initial_node} | End node: {final_node}\n")
+    
+    print("Graph Details:")
+    print(f"  - Nodes: {list(graph.nodes())}")
+    print(f"  - Edges: {list(graph.edges())}\n")
 
     if initial_node not in graph.nodes():
         print(f"Error: Initial node '{initial_node}' not found in graph!")
@@ -119,16 +125,23 @@ def main():
         print(f"Error: Final node '{final_node}' not found in graph!")
         sys.exit(1)
 
-    print("Computing Nash Equilibrium...")
+    print("\nComputing Nash Equilibrium...")
     equilibrium_flow = compute_travel_equilibrium(graph, num_vehicles, initial_node, final_node)
-    print("Nash Equilibrium Flow:", equilibrium_flow)
+    print("Nash Equilibrium Flow:")
+    for edge, flow in equilibrium_flow.items():
+        print(f"  {edge}: {flow:.2f}")
 
-    print("Computing Social Optimum...")
+    print("\nComputing Social Optimum...")
     social_flow = compute_social_optima(graph, num_vehicles, initial_node, final_node)
-    print("Social Optimum Flow:", social_flow)
+    print("Social Optimum Flow:")
+    for edge, flow in compute_social_optima(graph, num_vehicles, initial_node, final_node).items():
+        print(f"  {edge}: {flow:.2f}")
 
     if args.plot:
+        print("\nPlotting graph visualization...")
         plot_graph(graph, equilibrium_flow, social_flow)
+
+    print("\nAnalysis Complete!")
 
 if __name__ == "__main__":
     main()
